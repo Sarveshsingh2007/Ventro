@@ -1,0 +1,44 @@
+<nav class="navbar container">
+  <div class="brand">
+    <div class="logo">V</div>
+    VENTRO
+  </div>
+
+  <div class="search">
+    <!-- Search form -->
+    <form action="{{ url_for('search') }}" method="get" style="display: flex; align-items: center;">
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="Search products..." 
+        value="{{ request.args.get('q', '') }}"
+        style="background-color: #0e1b2b; color: #fff; border: none; border-radius: 8px; padding: 8px 12px; width: 280px;"
+      />
+      <button 
+        type="submit" 
+        style="margin-left: 8px; background: linear-gradient(135deg, #7f5af0, #2cb67d); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer;"
+      >
+        Search
+      </button>
+    </form>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center">
+    <a class="small-muted" href="{{ url_for('home') }}">🏠 Home</a>
+    <a class="small-muted" href="{{ url_for('cart') }}">🛒 Cart ({{ session.get('cart')|length if session.get('cart') else 0 }})</a>
+
+    {% if current_user.is_authenticated %}
+      <span class="small-muted">Hi, {{ current_user.username }}</span>
+      <a class="small-muted" href="{{ url_for('logout') }}">Logout</a>
+
+      {% if current_user.is_admin %}
+        <a class="small-muted" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+      {% endif %}
+
+    {% else %}
+      <a class="small-muted" href="{{ url_for('login') }}">Login</a>
+      <a class="small-muted" href="{{ url_for('register') }}">Sign up</a>
+      <a class="small-muted" href="{{ url_for('admin_login') }}" style="color: var(--accent); font-weight: 600;">Admin Login</a>
+    {% endif %}
+  </div>
+</nav>

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+
+<style>
+  /* Force dark theme styles for cart table */
+  .cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .cart-table th,
+  .cart-table td {
+    padding: 14px;
+    text-align: left;
+    color: #fff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .cart-table thead {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .cart-input {
+    width: 80px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    outline: none;
+  }
+
+  .cart-input:focus {
+    border-color: #ff6b6b;
+  }
+
+  .cart-button {
+    background: linear-gradient(90deg, #ff6b6b, #6c63ff);
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cart-button:hover {
+    opacity: 0.9;
+  }
+
+  .cart-total {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+  }
+</style>
+
+<h3 style="color: white; margin-bottom: 20px;">Your Cart</h3>
+
+<form method="post" action="{{ url_for('cart_update') }}">
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for it in items %}
+      <tr>
+        <td>{{ it.product.title }}</td>
+        <td>
+          <input type="number" 
+                 name="qty_{{ it.product.id }}" 
+                 value="{{ it.qty }}" 
+                 min="0" 
+                 class="cart-input">
+        </td>
+        <td>₹{{ it.product.price }}</td>
+        <td>₹{{ it.subtotal }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+    <button class="cart-button" type="submit">Update Cart</button>
+    <div class="cart-total">Total: ₹{{ total }}</div>
+  </div>
+</form>
+
+<div style="margin-top: 18px;">
+  <a href="{{ url_for('checkout') }}" class="cart-button">Proceed to Checkout</a>
+</div>
+
+{% endblock %}

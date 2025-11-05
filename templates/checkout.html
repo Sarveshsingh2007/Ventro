@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h3>Checkout</h3>
+<div style="background:rgba(255,255,255,0.02);padding:18px;border-radius:12px">
+  <h5>Order Summary</h5>
+  <ul>
+    {% for it in items %}
+    <li>{{ it.product.title }} × {{ it.qty }} — ₹{{ it.subtotal }}</li>
+    {% endfor %}
+  </ul>
+  <div class="total-row">Total: ₹{{ total }}</div>
+
+  <form method="post" style="margin-top:12px;">
+    <button class="button" type="submit">Pay with Card (Stripe)</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<h3>Products</h3>
+<table class="table">
+  <thead><tr><th>Title</th><th>Price</th><th>Category</th></tr></thead>
+  <tbody>
+    {% for p in products %}
+    <tr><td>{{ p.title }}</td><td>₹{{ p.price }}</td><td>{{ p.category.name if p.category else '' }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

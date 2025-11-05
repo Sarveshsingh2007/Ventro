@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h3>Admin Dashboard</h3>
+<div style="display:flex;gap:18px">
+  <div style="flex:1">
+    <h5>Products</h5>
+    <a class="button" href="{{ url_for('admin_product_form') }}">Add product</a>
+    <div class="admin-card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>{{ p.title }}</td>
+            <td>₹{{ p.price }}</td>
+            <td>{{ p.category.name if p.category else '' }}</td>
+            <td>
+              <a href="{{ url_for('admin_edit_product', product_id=p.id) }}" class="button small-btn">Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="width:320px">
+    <h5>Orders</h5>
+    <ul style="padding:0;list-style:none">
+      {% for o in orders %}
+      <li class="order-item">
+        #{{ o.id }} — ₹{{ o.amount }} — {{ o.status }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

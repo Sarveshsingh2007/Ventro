@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block content %}
+<h3>{{ category.name }}</h3>
+<div class="card-grid" style="margin-top:12px">
+  {% for p in products %}
+  <div class="product-card">
+    <div class="prod-img"><img src="{{ url_for('static', filename=p.image) }}" alt=""></div>
+    <div class="prod-title">{{ p.title }}</div>
+    <div class="prod-price">₹{{ p.price }}</div>
+    <a class="button" href="{{ url_for('product_view', slug=p.slug) }}">View</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

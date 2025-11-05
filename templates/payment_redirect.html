@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Payment Redirect{% endblock %}
+{% block content %}
+<div style="padding:40px;text-align:center">
+  <h3>Payment Cancelled</h3>
+  <p class="small-muted">Your payment was cancelled or failed. You can try again.</p>
+  <a class="button" href="{{ url_for('cart') }}">Return to cart</a>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}New Product{% endblock %}
+{% block content %}
+<div style="max-width:720px;margin:28px auto;padding:18px;background:rgba(255,255,255,0.02);border-radius:12px">
+  <h4>Create product</h4>
+  <form method="post">
+    <div class="mb-3"><label>Title</label><input name="title" class="form-control" required></div>
+    <div class="mb-3"><label>Slug</label><input name="slug" class="form-control"></div>
+    <div class="mb-3"><label>Price (INR)</label><input name="price" type="number" class="form-control" required></div>
+    <div class="mb-3"><label>Category slug</label><input name="category" class="form-control" required></div>
+    <div class="mb-3"><label>Image path</label><input name="image" class="form-control" value="products/prod1.jpg"></div>
+    <div class="mb-3"><label>Description</label><textarea name="description" class="form-control"></textarea></div>
+    <button class="button" type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}
+  

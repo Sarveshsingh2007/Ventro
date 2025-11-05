@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+<div style="max-width:420px;margin:40px auto;padding:22px;background:rgba(255,255,255,0.02);border-radius:12px">
+  <h4>Admin Login</h4>
+  <form method="post">
+    <div class="mb-3"><label>Username</label><input name="username" class="form-control" required></div>
+    <div class="mb-3"><label>Password</label><input name="password" type="password" class="form-control" required></div>
+    <button class="button" type="submit">Login</button>
+  </form>
+</div>
+{% endblock %}

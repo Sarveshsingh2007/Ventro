@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Search: {{ query }}{% endblock %}
+
+{% block content %}
+<div class="py-4 container">
+  <h2 class="mb-4 text-center">Search Results for "{{ query }}"</h2>
+
+  {% if results %}
+    <div class="row">
+      {% for product in results %}
+        <div class="col-md-3 mb-4 d-flex">
+          <div class="card bg-dark text-light shadow-sm h-100 w-100 d-flex flex-column">
+            <div class="ratio ratio-1x1">
+              <img src="{{ url_for('static', filename=product.image) }}"
+                   class="card-img-top object-fit-cover rounded-top"
+                   alt="{{ product.title }}">
+            </div>
+            <div class="card-body text-center flex-grow-1 d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title mb-1">{{ product.title }}</h5>
+                <p class="card-text text-secondary mb-1">{{ product.category.name }}</p>
+              </div>
+              <div>
+                <p class="fw-bold text-danger mb-2">₹{{ product.price }}</p>
+                <a href="{{ url_for('product_view', slug=product.slug) }}" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      No products found for "{{ query }}".
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ product.title }}{% endblock %}
+{% block content %}
+<div class="product-detail">
+  <div class="detail-image">
+    {% if product.image %}
+      <img src="{{ url_for('static', filename=product.image) }}" alt="{{ product.title }}" style="width:100%;border-radius:12px">
+    {% else %}
+      <img src="{{ url_for('static', filename='images/products/default.jpg') }}" alt="No Image" style="width:100%;border-radius:12px">
+    {% endif %}
+  </div>
+
+  <div class="detail-info">
+    <h2>{{ product.title }}</h2>
+    <div class="small-muted">{{ product.category.name if product.category else '' }}</div>
+    <p style="margin-top:12px">{{ product.description }}</p>
+
+    <div style="margin-top:18px">
+      <div class="prod-price" style="font-size:22px">₹{{ product.price }}</div>
+
+      {% if product.is_available %}
+      <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" style="margin-top:12px">
+        <input type="number" name="qty" value="1" min="1"
+               style="width:80px;padding:8px;border-radius:8px;border:0;background:#071022;color:white">
+        <button class="button" type="submit">Add to cart</button>
+      </form>
+      {% else %}
+      <button class="button" disabled style="margin-top:12px;opacity:0.6;cursor:not-allowed;">Out of Stock</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

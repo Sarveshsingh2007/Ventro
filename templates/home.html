@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="grid">
+  <div>
+    <h3 style="margin-bottom:12px">Trending</h3>
+    <div class="card-grid">
+      {% for p in products %}
+      <div class="product-card">
+        <div class="prod-img">
+          {% if p.image %}
+            <img src="{{ url_for('static', filename=p.image) }}" alt="{{ p.title }}">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/products/default.jpg') }}" alt="No Image">
+          {% endif %}
+        </div>
+
+        <div class="prod-title">{{ p.title }}</div>
+        <div class="small-muted">{{ p.category.name if p.category else '' }}</div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <div class="prod-price">₹{{ p.price }}</div>
+          <div>
+            {% if p.is_available %}
+              <a class="button" href="{{ url_for('product_view', slug=p.slug) }}">View</a>
+            {% else %}
+              <button class="button" disabled style="opacity:0.6;cursor:not-allowed;">Out of Stock</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside>
+    <div style="padding:18px;border-radius:12px;background:rgba(255,255,255,0.02)">
+      <h5>Categories</h5>
+      <ul style="list-style:none;padding:0;margin:0">
+        {% for c in categories %}
+        <li style="margin:8px 0">
+          <a href="{{ url_for('category_view', slug=c.slug) }}" class="small-muted">{{ c.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      <hr>
+      <div>
+        <h6>About VENTRO</h6>
+        <p class="small-muted">A modern boutique shopping experience — clean, fast and secure payments.</p>
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

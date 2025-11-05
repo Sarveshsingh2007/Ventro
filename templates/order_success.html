@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order Success{% endblock %}
+{% block content %}
+<div style="padding:40px;text-align:center">
+  <h2>Thank you — Order placed!</h2>
+  <p class="small-muted">Your payment was successful. We'll email you order details soon.</p>
+  {% if stripe_session %}
+    <p>Payment ID: {{ stripe_session.payment_intent }}</p>
+  {% endif %}
+  <a class="button" href="{{ url_for('home') }}">Continue shopping</a>
+</div>
+{% endblock %}
