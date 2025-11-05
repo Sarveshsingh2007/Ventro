@@ -9,12 +9,17 @@ import stripe
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
-load_dotenv(r'Ventro\ventro.env')
+# Load environment variables
+load_dotenv()
 
 def create_app():
     app = Flask(__name__, static_folder="static", template_folder="templates")
     app.config.from_object(Config)
     db.init_app(app)
+
+    # ✅ Auto-create tables if they don't exist (for Render)
+    with app.app_context():
+        db.create_all()
 
     # Stripe setup
     stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
@@ -52,7 +57,6 @@ def create_app():
         products = Product.query.order_by(Product.created_at.desc()).limit(12).all()
         return render_template('home.html', products=products, categories=categories)
 
-    # ✅ NEW: Search Route
     @app.route('/search')
     def search():
         query = request.args.get('q', '').strip()
@@ -113,7 +117,6 @@ def create_app():
             flash("Your cart is empty.", "warning")
             return redirect(url_for('home'))
         if request.method == 'POST':
-            # Create Stripe Checkout Session
             line_items = []
             for it in items:
                 price_in_paise = int(it['product'].price * 100)
@@ -250,7 +253,7 @@ def create_app():
         categories = Category.query.all()
         return render_template('admin/product_form.html', categories=categories)
     
-# --- ADMIN: Edit Product ---
+    # --- ADMIN: Edit Product ---
     @app.route('/admin/edit_product/<int:product_id>', methods=['GET', 'POST'])
     @login_required
     def admin_edit_product(product_id):
@@ -264,12 +267,10 @@ def create_app():
             product.description = request.form['description']
             product.category_id = request.form['category_id']
 
-            # --- Handle image upload or manual path ---
             new_image_path = request.form.get('image', '').strip()
             uploaded_image = request.files.get('image')
 
             if uploaded_image and uploaded_image.filename != '':
-                # Save uploaded image to static/images/products/
                 filename = secure_filename(uploaded_image.filename)
                 image_folder = os.path.join('static', 'images', 'products')
                 os.makedirs(image_folder, exist_ok=True)
@@ -278,19 +279,15 @@ def create_app():
                 product.image = f'images/products/{filename}'
 
             elif new_image_path:
-                # Normalize and clean manual path
                 new_image_path = new_image_path.replace('\\', '/').strip()
                 if new_image_path.startswith('static/'):
                     new_image_path = new_image_path[len('static/'):]
                 if not new_image_path.startswith('images/products/'):
-                    # Force to save only inside images/products/
                     filename = os.path.basename(new_image_path)
                     new_image_path = f'images/products/{filename}'
                 product.image = new_image_path
 
-            # --- Handle stock toggle ---
             product.is_available = 'is_available' in request.form
-
             db.session.commit()
             flash('✅ Product updated successfully!', 'success')
             return redirect(url_for('admin_dashboard'))
@@ -302,6 +299,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
