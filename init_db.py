@@ -1,12 +1,12 @@
 from app import create_app
 from models import db, User
 from werkzeug.security import generate_password_hash
-import seed_products  # 👈 imports your full product seeding script
+import seed_products  # Import the seeding script
 
 app = create_app()
 
 with app.app_context():
-    # Create all tables
+    # Create tables
     db.create_all()
     print("✅ Database tables created successfully!")
 
@@ -24,9 +24,9 @@ with app.app_context():
     else:
         print("✅ Admin user already exists.")
 
-    # Seed all categories and products
+    # Seed categories & products
     try:
-        seed_products.run_seed()  # 👈 this will call a function we'll define below
+        seed_products.run_seed(with_context=False)
         print("🎉 All products & categories seeded successfully!")
     except Exception as e:
         print(f"⚠️ Seeding skipped or failed: {e}")
