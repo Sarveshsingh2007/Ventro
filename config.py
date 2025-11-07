@@ -1,13 +1,16 @@
 import os
 from dotenv import load_dotenv
-load_dotenv(r'Ventro\ventro.env')
+
+# Load environment variables
+load_dotenv(os.path.join(os.path.dirname(__file__), 'ventro.env'))
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+INSTANCE_DIR = os.path.join(BASE_DIR, 'instance')
+os.makedirs(INSTANCE_DIR, exist_ok=True)
+
+DB_PATH = os.path.join(INSTANCE_DIR, 'ventro.db')
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or \
-        "sqlite:///" + os.path.join(BASE_DIR, "ventro.db")
+    SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret')
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB_PATH}"  # ✅ FIXED HERE
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
-    STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY", "")

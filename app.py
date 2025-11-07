@@ -9,22 +9,32 @@ import stripe
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 
-# Load environment variables
-load_dotenv()
+
+# ✅ Load environment variables
+load_dotenv()  # automatically loads from Ventro/.env
 
 def create_app():
     app = Flask(__name__, static_folder="static", template_folder="templates")
     app.config.from_object(Config)
+
+    # ✅ Load Stripe keys from environment
+    app.config['STRIPE_PUBLISHABLE_KEY'] = os.getenv('STRIPE_PUBLISHABLE_KEY')
+    app.config['STRIPE_SECRET_KEY'] = os.getenv('STRIPE_SECRET_KEY')
+
+    # ✅ Debug print to verify they loaded (optional)
+    print("Stripe Publishable Key Loaded:", bool(app.config['STRIPE_PUBLISHABLE_KEY']))
+    print("Stripe Secret Key Loaded:", bool(app.config['STRIPE_SECRET_KEY']))
+
     db.init_app(app)
 
-    # ✅ Auto-create tables if they don't exist (for Render)
+    # ✅ Auto-create tables if they don't exist
     with app.app_context():
         db.create_all()
 
-    # Stripe setup
-    stripe.api_key = app.config.get('STRIPE_SECRET_KEY')
+    # ✅ Stripe setup
+    stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
-    # Flask-Login setup
+    # ✅ Flask-Login setup
     login_manager = LoginManager()
     login_manager.login_view = "login"
     login_manager.init_app(app)
@@ -53,8 +63,9 @@ def create_app():
     # ---------- Routes ----------
     @app.route('/')
     def home():
+        products = Product.query.all()
         categories = Category.query.all()
-        products = Product.query.order_by(Product.created_at.desc()).limit(12).all()
+        print(f"✅ Home route loaded: {len(products)} products found.")
         return render_template('home.html', products=products, categories=categories)
 
     @app.route('/search')
@@ -252,7 +263,7 @@ def create_app():
             return redirect(url_for('admin_product_list'))
         categories = Category.query.all()
         return render_template('admin/product_form.html', categories=categories)
-    
+
     # --- ADMIN: Edit Product ---
     @app.route('/admin/edit_product/<int:product_id>', methods=['GET', 'POST'])
     @login_required
